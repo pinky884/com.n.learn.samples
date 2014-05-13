@@ -1,0 +1,13 @@
+@CHARSET "ISO-8859-1";
+
+.header{
+	background-color: red;
+	font-family:"Times New Roman", Times, serif;
+	font-weight: bold;
+}
+
+.footer{
+	background-color: grey;
+	font-family:"Times New Roman", Times, serif;
+	font-weight: bold;
+}

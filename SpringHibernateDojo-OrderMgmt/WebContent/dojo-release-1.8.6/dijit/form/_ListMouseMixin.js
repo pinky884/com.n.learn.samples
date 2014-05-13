@@ -1,0 +1,66 @@
+//>>built
+define("dijit/form/_ListMouseMixin",["dojo/_base/declare","dojo/mouse","dojo/on","dojo/touch","./_ListBase"],function(_1,_2,on,_3,_4){
+return _1("dijit.form._ListMouseMixin",_4,{postCreate:function(){
+this.inherited(arguments);
+this.own(on(this.domNode,"mousedown",function(_5){
+_5.preventDefault();
+}));
+this._listConnect("click","_onClick");
+this._listConnect("mousedown","_onMouseDown");
+this._listConnect("mouseup","_onMouseUp");
+this._listConnect("mouseover","_onMouseOver");
+this._listConnect("mouseout","_onMouseOut");
+},_onClick:function(_6,_7){
+this._setSelectedAttr(_7,false);
+if(this._deferredClick){
+this._deferredClick.remove();
+}
+this._deferredClick=this.defer(function(){
+this._deferredClick=null;
+this.onClick(_7);
+});
+},_onMouseDown:function(_8,_9){
+if(this._hoveredNode){
+this.onUnhover(this._hoveredNode);
+this._hoveredNode=null;
+}
+this._isDragging=true;
+this._setSelectedAttr(_9,false);
+},_onMouseUp:function(_a,_b){
+this._isDragging=false;
+var _c=this.selected;
+var _d=this._hoveredNode;
+if(_c&&_b==_c){
+this.defer(function(){
+this._onClick(_a,_c);
+});
+}else{
+if(_d){
+this.defer(function(){
+this._onClick(_a,_d);
+});
+}
+}
+},_onMouseOut:function(_e,_f){
+if(this._hoveredNode){
+this.onUnhover(this._hoveredNode);
+this._hoveredNode=null;
+}
+if(this._isDragging){
+this._cancelDrag=(new Date()).getTime()+1000;
+}
+},_onMouseOver:function(evt,_10){
+if(this._cancelDrag){
+var _11=(new Date()).getTime();
+if(_11>this._cancelDrag){
+this._isDragging=false;
+}
+this._cancelDrag=null;
+}
+this._hoveredNode=_10;
+this.onHover(_10);
+if(this._isDragging){
+this._setSelectedAttr(_10,false);
+}
+}});
+});
